@@ -1,3 +1,15 @@
+/*
+          This is a simple game, based on random generation.
+          I made it for one of my friend's birthday.
+          When you push the button, the AVR generates a 
+          random number between 10 and 99. Interfacing with 
+          the 4511, an interrupt will be generated and AVR drops
+          the "your age" to two 7-segment display, a sound-module
+          plays a evil-laughing-sound and turn off the LEDs.
+          After ~1.5 sec, you can push the button again.
+*/
+
+
 int a = 7;    //4 to 7: to the 7 segment decoder
 int b = 6;
 int c = 5;
