@@ -1,0 +1,210 @@
+int a = 7;    //4 to 7: to the 7 segment decoder
+int b = 6;
+int c = 5;
+int d = 4;
+int sound = 0;    //to the sound module
+int tizes = 9;    //9, 10: multiplexing pins
+int egyes = 10;
+int number_tizes;
+int number_egyes;
+int correction;
+int led = 11;       // the pin that the "LED-strip" is attached to
+volatile int state = LOW;
+
+void setup(){
+  pinMode(sound, OUTPUT);
+  digitalWrite(sound, LOW);  
+  pinMode(led, OUTPUT);
+  pinMode(a, OUTPUT);
+  pinMode(b, OUTPUT);
+  pinMode(c, OUTPUT);
+  pinMode(d, OUTPUT);
+  pinMode(tizes, OUTPUT);
+  pinMode(egyes, OUTPUT);
+  pinMode(3, INPUT);
+  digitalWrite(3, 1);
+  attachInterrupt(1, pushed, CHANGE); // attach interrupt to pin 3
+}
+
+void loop(){
+           //play some funny blink, display blinks too, showing a "0"
+  digitalWrite(tizes, 1);
+  nulla(); 
+  digitalWrite(egyes, 1);
+  analogWrite(led, 25);
+  delay(500);
+          // generating random number between 10 and 99
+          // with some correction in order to show 32 often
+  correction = random(1, 4);
+  if (correction == 1){
+    number_tizes = random (1, 9);
+    delay(5);
+    number_egyes = random (0, 9);
+  }else{
+    number_tizes = 3;
+    number_egyes = 2;
+  }
+          // the same thing as before, diplay shows "8"
+          // need to call the random gen because of interrupt
+  digitalWrite(tizes, 1);
+  digitalWrite(egyes, 1);
+  nyolc();
+  analogWrite(led, 50);
+  delay(500);
+  correction = random(1, 6);
+  if (correction == 1 | 5){
+    number_tizes = random (1, 6);
+    delay(5);
+    number_egyes = random (0, 9);
+  }else{
+    number_tizes = 3;
+    number_egyes = 2;
+  }
+}
+
+void pushed(){    //interrupt
+  digitalWrite(led, LOW);    //turn blinking leds off
+  digitalWrite(sound, HIGH);   // trigger the base of the transistor
+                               // so music can be played
+    for(int i = 0; i<2000; i++){    //multiplexing
+      digitalWrite(tizes, 1);       //choose the number
+      digitalWrite(egyes, 0);       // of random gen and send
+      if (number_tizes == 1){       //it to the display
+        egy();
+      }
+      if (number_tizes == 2){
+        ketto();
+      }
+      if (number_tizes == 3){
+        harom();
+      }
+      if (number_tizes == 4){
+        negy();
+      }
+      if (number_tizes == 5){
+        ot();
+      }
+      if (number_tizes == 6){
+        hat();
+      }
+      if (number_tizes == 7){
+        het();
+      }
+      if (number_tizes == 8){
+        nyolc();
+      }
+      if (number_tizes == 9){
+        kilenc();
+      }
+      delay(5);
+      
+      digitalWrite(tizes, 0);
+      digitalWrite(egyes, 1);
+      if (number_egyes == 0){
+        nulla();
+      }
+      if (number_egyes == 1){
+        egy();
+      }
+      if (number_egyes == 2){
+        ketto();
+      }
+      if (number_egyes == 3){
+        harom();
+      }
+      if (number_egyes == 4){
+        negy();
+      }
+      if (number_egyes == 5){
+        ot();
+      }
+      if (number_egyes == 6){
+        hat();
+      }
+      if (number_egyes == 7){
+        het();
+      }
+      if (number_egyes == 8){
+        nyolc();
+      }
+      if (number_egyes == 9){
+        kilenc();
+      }
+      delay(5);
+    }
+    digitalWrite(egyes, 0);      //shut down displays
+    digitalWrite(tizes, 0);
+    digitalWrite(sound, LOW);     //shut down sound
+  }
+    
+    
+void nulla(){          // order values to numbers:
+  digitalWrite(a,0);    //"0"
+  digitalWrite(b,0);
+  digitalWrite(c,0);
+  digitalWrite(d,0);
+}
+  
+void egy(){
+  digitalWrite(a,1);  //"1"
+  digitalWrite(b,0);
+  digitalWrite(c,0);
+  digitalWrite(d,0);
+}
+
+void ketto(){
+  digitalWrite(a,0);  //"2"
+  digitalWrite(b,1);
+  digitalWrite(c,0);
+  digitalWrite(d,0);
+}
+
+void harom(){
+  digitalWrite(a,1);  //"3"
+  digitalWrite(b,1);
+  digitalWrite(c,0);
+  digitalWrite(d,0);
+}
+
+void negy(){
+  digitalWrite(a,0);  //"4"
+  digitalWrite(b,0);
+  digitalWrite(c,1);
+  digitalWrite(d,0);
+}
+
+void ot(){
+  digitalWrite(a,1);   //"5"
+  digitalWrite(b,0);
+  digitalWrite(c,1);
+  digitalWrite(d,0);
+}
+
+void hat(){
+  digitalWrite(a,0);  //"6"
+  digitalWrite(b,1);
+  digitalWrite(c,1);
+  digitalWrite(d,0);
+}
+
+void het(){
+  digitalWrite(a,1);  //"7"
+  digitalWrite(b,1);
+  digitalWrite(c,1);
+  digitalWrite(d,0);
+}
+
+void nyolc(){
+  digitalWrite(a,0);   //"8"
+  digitalWrite(b,0);
+  digitalWrite(c,0);
+  digitalWrite(d,1);
+}
+
+void kilenc(){
+  digitalWrite(a,1);  //"9"
+  digitalWrite(b,0);
+  digitalWrite(c,0);
+  digitalWrite(d,1);
+}
+
